@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Elemento, SegundoElemento} from '../elemento';
 import { TodoListService } from '../todo-list.service';
 import { TodoListStorageService } from '../todo-list-storage.service';
+import { AuthService } from './../auth.service';
 
 const defaultList = [
   { title: 'install NodeJS' },
@@ -14,19 +15,24 @@ const defaultList = [
 @Component({
   selector: 'todo-list-manager',
   template: `
-  <div class="todo-app">
-    <h1>
-      {{title}}
-    </h1>
-    <todo-input (submit)="addItem($event)" ></todo-input>
-    <ul>
-      <li *ngFor="let todoItem of todoList">
-        <todo-item (remove)="removeItem($event)" (changeTitle)="changeItemTitle($event)"
-        [item]="todoItem"></todo-item>
-      </li>
-    </ul>
-  </div>
 
+  <p *ngIf="!authService.isLoggedIn">
+  Debes loguearte
+  </p>
+  <div *ngIf="authService.isLoggedIn">
+  <div class="todo-app">
+  <h1>
+    {{title}}
+  </h1>
+  <todo-input (submit)="addItem($event)" ></todo-input>
+  <ul>
+    <li *ngFor="let todoItem of todoList">
+      <todo-item (remove)="removeItem($event)" (changeTitle)="changeItemTitle($event)"
+      [item]="todoItem"></todo-item>
+    </li>
+  </ul>
+</div>
+  </div>
   `,
   styleUrls: ['./list-manager.component.scss']
 })
@@ -38,7 +44,8 @@ export class ListManagerComponent implements OnInit {
   todoList: Array<Elemento> = [] ;
   excede = this.todoList.length > 0;
   constructor(private todoListService: TodoListService,
-              private todoListStorageService: TodoListStorageService) {
+              private todoListStorageService: TodoListStorageService,
+              public authService: AuthService) {
 
 
    }
