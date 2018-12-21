@@ -21,7 +21,7 @@ const defaultList = [
     <todo-input (submit)="addItem($event)" ></todo-input>
     <ul>
       <li *ngFor="let todoItem of todoList">
-        <todo-item (remove)="removeItem($event)"
+        <todo-item (remove)="removeItem($event)" (changeTitle)="changeItemTitle($event)"
         [item]="todoItem"></todo-item>
       </li>
     </ul>
@@ -76,5 +76,10 @@ export class ListManagerComponent implements OnInit {
   removeItem(item) {
     this.todoList = this.todoListStorageService.destroy(item);
     this.todoList = this.todoListStorageService.get();
+  }
+  changeItemTitle({item, newTitle}) {
+    this.todoListStorageService.put(item, new Elemento(newTitle, ''));
+    this.todoList = this.todoListStorageService.get();
+
   }
 }
